@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #stopwatch-container {
+            text-align: center;
+        }
+
+        #time {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="stopwatch-container">
+    <h2>Stopwatch</h2>
+    <div id="time">00:00:00</div>
+    <button onclick="startStopwatch()">Start</button>
+    <button onclick="pauseStopwatch()">Pause</button>
+    <button onclick="resetStopwatch()">Reset</button>
+</div>
+
+<script>
+    let startTime;
+    let isRunning = false;
+    let intervalId;
+
+    function startStopwatch() {
+        if (!isRunning) {
+            startTime = Date.now() - (parseInt(document.getElementById('time').textContent.replace(/:/g, '')) || 0);
+            isRunning = true;
+            intervalId = setInterval(updateTime, 10);
+        }
+    }
+
+    function pauseStopwatch() {
+        if (isRunning) {
+            clearInterval(intervalId);
+            isRunning = false;
+        }
+    }
+
+    function resetStopwatch() {
+        clearInterval(intervalId);
+        isRunning = false;
+        document.getElementById('time').textContent = '00:00:00';
+    }
+
+    function updateTime() {
+        const currentTime = Date.now();
+        const elapsedTime = new Date(currentTime - startTime);
+
+        const minutes = elapsedTime.getUTCMinutes();
+        const seconds = elapsedTime.getUTCSeconds();
+        const milliseconds = Math.floor(elapsedTime.getUTCMilliseconds() / 10);
+
+        document.getElementById('time').textContent = formatTime(minutes) + ':' + formatTime(seconds) + ':' + formatTime(milliseconds);
+    }
+
+    function formatTime(value) {
+        return value < 10 ? '0' + value : value;
+    }
+</script>
+
+</body>
+</html>
